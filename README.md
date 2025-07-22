@@ -9,7 +9,6 @@ Overview Designed and implemented a CAN-based communication system for an electr
 - STM32F1 (STM32F103C8T6)
 - STM32CubeMX, Keil uVision
 - C programming (embedded)
-- SPL
 - Can bus MCU230 SN65HVD230
 - CAN MCP2515
-- Raspberry pi 5
+
