@@ -137,7 +137,6 @@ typedef struct {
     uint8_t turn_left;         // 1 bit
     uint8_t turn_right;        // 1 bit
 		uint8_t brake; 						//  1 bit
-    uint8_t reserved;          // các bit còn l?i (4 bit), padding
 } CAN_DataFrame_t;
 CAN_DataFrame_t canData;
   /* USER CODE END 2 */
