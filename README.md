@@ -4,7 +4,7 @@ Overview Designed and implemented a CAN-based communication system for an electr
 - STM32F103 microcontroller used as the primary ECU platform.
 - Configured bxCAN peripheral on STM32 using STM32CubeMX and HAL libraries.
 - Developed drivers for CAN initialization, transmit, receive, and filter configuration.
-- Implemented custom CAN message protocol for throttle position, motor speed, signals for lights and vehicle accessories and dashboard display.
+- Implemented custom CAN message protocol for throttle position, motor speed, signals for lights and vehicle accessories.
 ## Echnologies Used
 - STM32F1 (STM32F103C8T6)
 - STM32CubeMX, Keil uVision
