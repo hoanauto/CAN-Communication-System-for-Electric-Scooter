@@ -35,22 +35,24 @@ void loop() {
     if (rxId == 0x202 && len == 8) {
       uint16_t Vpin_adc = (rxBuf[0] << 8) | rxBuf[1];
       uint16_t temperature_adc = (rxBuf[2] << 8) | rxBuf[3];
-      bool headlight = (rxBuf[4] >> 3) & 0x01;
-      bool turn_left = (rxBuf[4] >> 2) & 0x01;
-      bool turn_right = (rxBuf[4] >> 1) & 0x01;
-      bool brake = (rxBuf[4] >> 0) & 0x01;
+      bool headlight = (rxBuf[4] >> 7) & 0x01;
+      bool turn_left = (rxBuf[4] >> 6) & 0x01;
+      bool turn_right = (rxBuf[4] >> 5) & 0x01;
+      bool brake = (rxBuf[4] >> 4) & 0x01;
       Serial.println("------ Received CAN Data ------");
-      Serial.print("Vpin ADC: "); Serial.println(current_adc);
+      Serial.print("Vpin ADC: "); Serial.println(Vpin_adc);
       Serial.print("Temperature ADC: "); Serial.println(temperature_adc);
       Serial.print("Headlight: "); Serial.println(headlight);
       Serial.print("Turn Left: "); Serial.println(turn_left);
       Serial.print("Turn Right: "); Serial.println(turn_right);
       Serial.print("Brake: "); Serial.println(brake);
+      delay(500);
     }
     else if(rxId == 0x201 && len == 8) 
     { uint16_t throttle_adc = (rxBuf[0] << 8) | rxBuf[1];
      Serial.println("==> From Node 2 [0x201]");
       Serial.print("Throttle ADC: "); Serial.println(throttle_adc);
+      delay(500);
     }
   }
 }

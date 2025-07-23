@@ -128,7 +128,7 @@ CAN_TxHeaderTypeDef Txdkdc;
 Txdkdc.StdId = 0x301;
 Txdkdc. IDE = CAN_ID_STD;
 Txdkdc.RTR= CAN_RTR_DATA;
-Txdkdc.DLC = 5;
+Txdkdc.DLC = 8;
 
 typedef struct {
     uint16_t VPin_adc;      // 2 byte
@@ -165,7 +165,7 @@ canData.VPin_adc = Vbat;
 canData.temperature_adc = temperature;
 
 // Gi? s? b?n dang d?c tr?ng thái dèn/giao thông t? GPIO
-canData.headlight = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5);
+canData.headlight = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_7);
 canData.turn_left = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5);
 canData.turn_right = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
 canData.brake = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_8);  // Ð?c chân phanh
@@ -194,6 +194,9 @@ TxDKDC[2] = (canData.temperature_adc >> 8) & 0xFF;
 TxDKDC[3] = canData.temperature_adc & 0xFF;
 
 TxDKDC[4] = (canData.brake & 0x01) << 7;  // d?t ? bit 7 (MSB)
+TxDKDC[5] = 0;
+TxDKDC[6] = 0;
+TxDKDC[7] = 0;
 HAL_CAN_AddTxMessage(&hcan, &Txdkdc, TxDKDC, &TxMailbox);
 HAL_Delay(100);
 // G?i CAN
@@ -412,7 +415,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA5 PA8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_8;
+  GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

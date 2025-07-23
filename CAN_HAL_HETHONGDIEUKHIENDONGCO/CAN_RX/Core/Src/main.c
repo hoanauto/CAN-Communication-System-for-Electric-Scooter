@@ -59,8 +59,6 @@ static void MX_ADC1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint16_t current_adc, temperature_adc;
-uint8_t brake;
 float throttle_adc;  // giá tr? c?m bi?n tay ga
 uint16_t throttle;
 uint8_t limited_speed;  // c? gi?i h?n t?c d?
@@ -73,7 +71,6 @@ typedef struct {
     uint16_t current_adc;      // 2 byte
     uint16_t temperature_adc;  // 2 byte
     uint8_t brake;         // 1 bit
-    uint8_t reserved;          // 7 bit (không dùng)
 } CAN_DataFrame_t;
 
 CAN_DataFrame_t canRxData;
@@ -138,7 +135,7 @@ HAL_CAN_Start(&hcan);
 	
     /* USER CODE BEGIN 3 */
 		 HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, 10);
+    HAL_ADC_PollForConversion(&hadc1, 100);
     throttle_adc = HAL_ADC_GetValue(&hadc1);
     HAL_ADC_Stop(&hadc1);
 		throttle = (throttle_adc / 4095.0f) * 1500.0f;
@@ -149,10 +146,20 @@ HAL_CAN_Start(&hcan);
 CAN_TxHeaderTypeDef TxHeader;
 // G?i tay ga cho node 3 d? hi?n th?
 TxHeader.StdId = 0x201;  // ID g?i cho node 3 t? node 2
-TxHeader.DLC = 2;
+TxHeader.DLC = 8;
+TxHeader. IDE = CAN_ID_STD;
+TxHeader.RTR= CAN_RTR_DATA;
 TxData[0] = (throttle >> 8) & 0xFF;
 TxData[1] = throttle & 0xFF;
+TxData[2] =0;
+TxData[3] =0;
+TxData[4] =0;
+TxData[5] =0;
+TxData[6] =0;
+TxData[7]=0;
+
 HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox);
+HAL_Delay(50); 
   /* USER CODE END 3 */
 }}
 
@@ -338,17 +345,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 						    canRxData.brake = (RxData[4] >> 7) & 0x01;
     
 // X? lý di?u ki?n
-    if (temperature_adc > NGUONG_NHIET_DO)  // ví d? 800 ~ 80 d? C
+    if (canRxData.temperature_adc > NGUONG_NHIET_DO)  // ví d? 800 ~ 80 d? C
     {
         throttle = 0;  // t?t tay ga
        
     }
-    else if (brake)
+    else if (canRxData.brake)
     {
         throttle = 0;  // d?ng xe
      
     }
-    else if (current_adc < NGUONG_PIN)  // ví d? 2048 (n?u ADC 12bit max = 4095)
+    else if (canRxData.current_adc < NGUONG_PIN)  // ví d? 2048 (n?u ADC 12bit max = 4095)
     {
         limited_speed = 1;
     }
